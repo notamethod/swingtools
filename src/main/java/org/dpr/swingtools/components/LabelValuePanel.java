@@ -48,14 +48,14 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
     private FrameModel model = null;
     private int nbCols;
     private String dateFormat = DEFAULT_DATE_FORMAT;
-    private Map<String, Object> elements;
+    private ExtendedMap<String, Object> elements;
     private Map<String, Object> components;
     private List<LabelValuePanel> child = new ArrayList<>();
 
     public LabelValuePanel() {
         super();
         this.setLayout(new SpringLayout());
-        this.elements = new HashMap<>();
+        this.elements = new ExtendedHashMap<>();
         this.components = new HashMap<>();
     }
 
@@ -66,7 +66,7 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
     public LabelValuePanel(FrameModel model) {
         super();
         this.setLayout(new SpringLayout());
-        this.elements = new HashMap<>();
+        this.elements = new ExtendedHashMap<>();
         this.components = new HashMap<>();
     }
 
@@ -110,6 +110,23 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
         JComponent component = null;
         if (class1.getName().equals(JComboBox.class.getName())) {
             component = putCombo(keyValue, values, "");
+        }
+
+        this.add(jl);
+        this.add(component);
+        nbRows++;
+        SpringUtilities.makeCompactGrid(this, nbRows, 2, 3, 3, 3, 3);
+    }
+
+    public void putList(String label, Class<?> class1, String keyValue) {
+        putList(label, class1, keyValue, null);
+    }
+    public void putList(String label, Class<?> class1, String keyValue, JStringList.Position pos) {
+        JLabel jl = new JLabel(label);
+
+        JComponent component = null;
+        if (class1.getName().equals(JStringList.class.getName())) {
+            component = putJStringList(label, keyValue, pos);
         }
 
         this.add(jl);
@@ -189,6 +206,18 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
             combo.addActionListener(listener);
         }
         return combo;
+    }
+
+    private JComponent putJStringList(String label, String keyValue, JStringList.Position pos) {
+        final String globalKey = keyValue;
+
+        JStringList jsList = new JStringList(label, pos);
+
+            if (elements.get(globalKey) == null) {
+                elements.put(globalKey, jsList.getListModel());
+            }
+
+        return jsList;
     }
 
     private List<JComponent> putRadios(String keyValue, Map<String, String> values, String defaultValue) {
@@ -391,7 +420,7 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
 
             boolean valCheck = Boolean.parseBoolean(strValue);
             JCheckBox checkbox = new JCheckBox("", valCheck);
-
+            checkbox.setEnabled(isEditable);
             elements.put(globalKey, checkbox.isSelected());
 
             checkbox.addActionListener(new ActionListener() {
@@ -620,7 +649,7 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
     /**
      * @return the elements
      */
-    public Map<String, Object> getElements() {
+    public ExtendedMap<String, Object> getElements() {
         if (!child.isEmpty())
             child.forEach(item -> elements.putAll(item.getElements()));
         return elements;
@@ -631,7 +660,7 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
     /**
      * @param elements the elements to set
      */
-    public void setElements(Map<String, Object> elements) {
+    public void setElements(ExtendedMap<String, Object> elements) {
         this.elements = elements;
     }
 

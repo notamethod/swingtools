@@ -1,4 +1,4 @@
 # Swingtools
 
-Some swing components
+Some java swing components
 

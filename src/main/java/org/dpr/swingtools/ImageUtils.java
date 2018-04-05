@@ -22,11 +22,14 @@ import org.apache.commons.logging.LogFactory;
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * Images Utilities.
+ *
+ */
 public class ImageUtils {
 
     private static final Log log = LogFactory.getLog(ImageUtils.class);
-	/** Returns an ImageIcon, or null if the path was invalid. */
+	/** Returns an ImageIcon, or null if the path is invalid. */
 	public static ImageIcon createImageIcon(String path) {
 		log.trace(path + " in");
 		java.net.URL imgURL = ImageUtils.class.getResource(path);
@@ -34,7 +37,7 @@ public class ImageUtils {
 		if (imgURL != null) {
 			return new ImageIcon(imgURL);
 		} else {
-			System.err.println("Couldn't find file: " + path);
+			log.error("Couldn't find file: " + path);
 			return null;
 		}
 	}
@@ -48,7 +51,7 @@ public class ImageUtils {
 		if (img != null) {
 			return img;
 		} else {
-			System.err.println("Couldn't find file: " + path);
+			log.error("Couldn't find file: " + path);
 			return null;
 		}
 	}

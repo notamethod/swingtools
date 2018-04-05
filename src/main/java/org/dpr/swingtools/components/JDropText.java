@@ -27,107 +27,104 @@ import java.awt.event.ActionEvent;
  * Component used to select a file or a directory.
  * textfield with drop capabilities associated with a right button for file selection.
  */
-public class JDropText extends JPanel  {
+public class JDropText extends JPanel {
 
     private JDropTextField textfield;
     private JButton chooseButton;
+    JFileChooser jfc = new JFileChooser();
 
-	public JDropText(JComponent jc1, JComponent jc2) {
-		setLayout(new FlowLayout(FlowLayout.LEADING));
-		add(jc1);
-		add(jc2);
-	}
+    public JDropText(JComponent jc1, JComponent jc2) {
+        setLayout(new FlowLayout(FlowLayout.LEADING));
+        add(jc1);
+        add(jc2);
+    }
 
-	public JDropText(JComponent jc1, JComponent jc2, int position) {
-		setLayout(new FlowLayout(position));
-		add(jc1);
-		add(jc2);
-	}
-	
-	   public JDropText() {
-	       setLayout(new FlowLayout(FlowLayout.LEADING));
-	        textfield  = new JDropTextField("", 20);
-	        textfield.setEditable(false);
-	        chooseButton = new JButton("...");
-	        add(textfield);
-	        add(chooseButton);
-	        initComponent();
-	    }
-	   
-	   private void initComponent(){
-	       
-	       chooseButton.addActionListener(new GenericAction());
-	       chooseButton.setActionCommand("CHOOSE_IN");	 
+    public JDropText(JComponent jc1, JComponent jc2, int position) {
+        setLayout(new FlowLayout(position));
+        add(jc1);
+        add(jc2);
+    }
 
-	        DropTarget dropTarget = new DropTarget(textfield, textfield);	       
-	   }
+    public JDropText() {
+        setLayout(new FlowLayout(FlowLayout.LEADING));
+        textfield = new JDropTextField("", 20);
+        textfield.setEditable(false);
+        chooseButton = new JButton("...");
+        add(textfield);
+        add(chooseButton);
+        initComponent();
+    }
 
+    private void initComponent() {
 
-    private class TextListener implements DocumentListener
-	    {
+        chooseButton.addActionListener(new GenericAction());
+        chooseButton.setActionCommand("CHOOSE_IN");
 
-	        public void changedUpdate(DocumentEvent e)
-	        {
-	            updateOutput();
+        DropTarget dropTarget = new DropTarget(textfield, textfield);
+    }
 
-	        }
+    private void updateOutput() {
+        // not implemented
 
-	        public void insertUpdate(DocumentEvent e)
-	        {
-
-	            updateOutput();
-
-	        }
-
-	        public void removeUpdate(DocumentEvent e)
-	        {
-	            updateOutput();
-
-	        }
-
-        }
-
-    class GenericAction extends AbstractAction
-	    {
-
-	        public void actionPerformed(ActionEvent event)
-	        {
-	            String command = event.getActionCommand();
-	          
-
-	            if (command.equals("CHOOSE_IN"))
-	            {
-	                JFileChooser jfc = new JFileChooser();
-
-	                if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-	                {
-	                    textfield.setText(jfc.getSelectedFile().getAbsolutePath());
-
-	                }
-
-	            }
-	        }
-	    }
-
-
-    private void updateOutput()
-    {
-        // TODO Auto-generated method stub
-        
     }
 
     /**
-     *
-     * @return the vaolue of the text field
+     * @return the value of the text field
      */
-    public String getText()
-    {
-        // TODO Auto-generated method stub
+    public String getText() {
         return textfield.getText();
     }
-    
-    public void addListener(DocumentListener myListener){
+
+    public boolean isEditable() {
+        return textfield.isEditable();
+    }
+
+    public void setEditable(boolean var1) {
+        textfield.setEditable(var1);
+    }
+
+    public void setFileSelectionMode(int selectionMode){jfc.setFileSelectionMode(selectionMode);}
+
+    public void addListener(DocumentListener myListener) {
         textfield.getDocument().addDocumentListener(myListener);
+    }
+
+    private class TextListener implements DocumentListener {
+
+        public void changedUpdate(DocumentEvent e) {
+            updateOutput();
+
+        }
+
+        public void insertUpdate(DocumentEvent e) {
+
+            updateOutput();
+
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            updateOutput();
+
+        }
+
+    }
+
+    class GenericAction extends AbstractAction {
+
+        public void actionPerformed(ActionEvent event) {
+            String command = event.getActionCommand();
+
+
+            if (command.equals("CHOOSE_IN")) {
+
+
+                if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    textfield.setText(jfc.getSelectedFile().getAbsolutePath());
+
+                }
+
+            }
+        }
     }
 
 }
