@@ -16,6 +16,8 @@
 
 package org.dpr.swingtools.components;
 
+import org.dpr.swingtools.TextEventListener;
+
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -23,6 +25,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +33,11 @@ import java.util.List;
  */
 class JDropTextField extends JTextField implements DropTargetListener {
 
+    public List<TextEventListener> getListeners() {
+        return listeners;
+    }
+
+    private List<TextEventListener> listeners = new ArrayList<>();
 	public JDropTextField(String string, int i) {
 		super(string, i);
 	}
@@ -80,7 +88,6 @@ class JDropTextField extends JTextField implements DropTargetListener {
 
 	public void dropActionChanged(DropTargetDragEvent dtde) {
 		// System.out.println("dropActionChanged");
-
 	}
 
 	// This method handles a drop for a list of files
@@ -93,7 +100,18 @@ class JDropTextField extends JTextField implements DropTargetListener {
 		final String transferURL = transferFile.getAbsolutePath();
 		// System.out.println("File URL is " + transferURL);
 		this.setText(transferURL);
+		notifyTextChanged(transferURL);
 
 		return true;
+	}
+
+    public void addListener(TextEventListener listener) {
+        listeners.add(listener);
+    }
+
+	private void notifyTextChanged(String transferURL) {
+		for (TextEventListener listener : listeners) {
+			listener.textChanged(transferURL);
+		}
 	}
 }

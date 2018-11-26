@@ -96,8 +96,14 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
         child.add(lvPanel);
     }
 
-    public void put(String label, String id, String defaultValue) {
-        put(label, JTextField.class, id, defaultValue, true);
+    /**
+     * add a label: textfield to the panel
+     * @param label label of the component
+     * @param key
+     * @param defaultValue
+     */
+    public void put(String label, String key, String defaultValue) {
+        put(label, JTextField.class, key, defaultValue, true);
     }
 
     public void putDisabled(String label, String id, String defaultValue) {
@@ -260,7 +266,12 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
     }
 
     public LabelValuePanel put(String label, Class<?> class1, String keyValue, Object value, boolean isEditable) {
-        JLabel jl = new JLabel(label);
+        SWLabel jl = new SWLabel(label);
+       return put(jl, class1,  keyValue,  value,  isEditable);
+    }
+    public LabelValuePanel put(SWLabel swLabel, Class<?> class1, String keyValue, Object value, boolean isEditable) {
+        JLabel jl = swLabel.getJLabel();
+        String label = jl.getText();
         String strValue = null;
         if (value != null) {
 
@@ -528,7 +539,6 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
     // }
 
     public void set(String keyValue, Object value) {
-
         String strValue = null;
         if (value != null) {
             if (value instanceof String) {
@@ -562,10 +572,7 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
 
             JComboBox field = (JComboBox) component;
             field.setSelectedItem(strValue);
-
-
         }
-
     }
 
     public JComponent getComponent(String key) {
@@ -604,6 +611,12 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
         return this;
     }
 
+    /**
+     * add a (colored) title to the panel
+     * @param title
+     * @param bgColor
+     * @return
+     */
     public LabelValuePanel addTitle(String title, Color bgColor) {
         JLabel jl = new JLabel(title);
         Font f = jl.getFont();
@@ -684,6 +697,13 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
         }
     }
 
+    /**
+     *
+     * @param keyValue
+     * @param value
+     * @deprecated :
+     */
+    @Deprecated
     public void put(String keyValue, String value) {
         final String globalKey = keyValue;
 
@@ -693,15 +713,22 @@ public class LabelValuePanel extends JPanel implements DocumentListener {
 
     }
 
+
+    @Deprecated
     public void put(JComponent cbDuration) {
         cbDuration.setVisible(false);
         this.add(cbDuration);
 
     }
 
-    public void put(String label, JComponent cbDuration) {
+    /**
+     * Add a pair "label: component" in the panel
+     * @param label
+     * @param component
+     */
+    public void put(String label, JComponent component) {
 
-        this.add(cbDuration);
+        this.add(component);
         nbRows++;
 
     }

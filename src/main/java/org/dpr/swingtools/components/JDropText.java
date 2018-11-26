@@ -16,12 +16,16 @@
 
 package org.dpr.swingtools.components;
 
+import org.dpr.swingtools.TextEventListener;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Component used to select a file or a directory.
@@ -29,6 +33,7 @@ import java.awt.event.ActionEvent;
  */
 public class JDropText extends JPanel {
 
+    private List<TextEventListener> listeners = new ArrayList<>();
     private JDropTextField textfield;
     private JButton chooseButton;
     JFileChooser jfc = new JFileChooser();
@@ -109,6 +114,17 @@ public class JDropText extends JPanel {
 
     }
 
+    public void addListener(TextEventListener listener) {
+        listeners.add(listener);
+        textfield.getListeners().add(listener);
+    }
+
+    void notifyTextDropped(String text) {
+        for (TextEventListener listener : listeners) {
+            listener.textChanged(text);
+        }
+    }
+
     class GenericAction extends AbstractAction {
 
         public void actionPerformed(ActionEvent event) {
@@ -116,13 +132,10 @@ public class JDropText extends JPanel {
 
 
             if (command.equals("CHOOSE_IN")) {
-
-
                 if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     textfield.setText(jfc.getSelectedFile().getAbsolutePath());
-
+                    notifyTextDropped(textfield.getText());
                 }
-
             }
         }
     }
