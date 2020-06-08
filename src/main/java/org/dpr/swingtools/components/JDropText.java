@@ -24,6 +24,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +39,13 @@ public class JDropText extends JPanel {
     private JButton chooseButton;
     JFileChooser jfc = new JFileChooser();
 
-    public JDropText(JComponent jc1, JComponent jc2) {
+    protected JDropText(JComponent jc1, JComponent jc2) {
         setLayout(new FlowLayout(FlowLayout.LEADING));
         add(jc1);
         add(jc2);
     }
 
-    public JDropText(JComponent jc1, JComponent jc2, int position) {
+    protected JDropText(JComponent jc1, JComponent jc2, int position) {
         setLayout(new FlowLayout(position));
         add(jc1);
         add(jc2);
@@ -89,6 +90,10 @@ public class JDropText extends JPanel {
     }
 
     public void setFileSelectionMode(int selectionMode){jfc.setFileSelectionMode(selectionMode);}
+
+    public void setCurrentDirectory(File directory){
+        jfc.setCurrentDirectory(directory);
+    }
 
     public void addListener(DocumentListener myListener) {
         textfield.getDocument().addDocumentListener(myListener);
